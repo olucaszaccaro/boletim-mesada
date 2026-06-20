@@ -55,6 +55,11 @@
   button.reset:hover{background:var(--ink);color:#fff;}
   .saved-note{font-size:10.5px;color:var(--ink-soft);align-self:center;opacity:0.75;}
   @media(max-width:540px){.sheet::before{left:26px;}header.title-block{padding-left:42px;}.ledger,.progress-line,.total-wrap,.legend,.actions{margin-left:42px;margin-right:18px;}.ledger-head,.row{grid-template-columns:22px 1fr 70px 84px;gap:6px;}.subject{font-size:13px;}.tiers{grid-template-columns:repeat(5,1fr);font-size:9.5px;}}
+  .bonus-row{background:linear-gradient(135deg,rgba(47,107,79,0.08),rgba(47,107,79,0.04));border:1.5px solid var(--stamp-green) !important;border-radius:6px;margin-top:4px;}
+  .bonus-row .value{color:var(--stamp-green);font-size:15px;}
+  .bonus-row .subject{color:var(--stamp-green);}
+  .bonus-locked{opacity:0.3;filter:grayscale(1);}
+  .bonus-badge{font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:0.05em;color:#fff;background:var(--stamp-green);padding:2px 6px;border-radius:20px;text-transform:uppercase;}
 </style>
 </head>
 <body>
@@ -70,6 +75,12 @@
       <span>Nº</span><span>Matéria</span><span style="text-align:center">Nota</span><span style="text-align:right">Valor</span>
     </div>
     <div id="rows"></div>
+    <div class="row bonus-row bonus-locked" id="bonus-row">
+      <span class="num">★</span>
+      <span class="subject">Sem recuperação <span class="bonus-badge">bônus</span></span>
+      <span></span>
+      <span class="value">+ R$ 100</span>
+    </div>
   </div>
   <div class="progress-line">
     <span id="progress-label">0/10 notas lançadas</span>
