@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boletim da Mesada — Lucas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#F6F1E3;--paper-deep:#EFE7D2;--ink:#1B2A41;--ink-soft:#51637A;--margin-red:#B23A2E;--math-amber:#C98A2C;--math-amber-bg:#FBF0DC;--stamp-green:#2F6B4F;--pending:#B5A78E;--line:#DCD2B8;--card-shadow:0 18px 40px -22px rgba(27,42,65,0.35);}
+  *{box-sizing:border-box;}
+  body{margin:0;background:radial-gradient(circle at 12% 8%,rgba(178,58,46,0.06),transparent 40%),radial-gradient(circle at 90% 85%,rgba(47,107,79,0.06),transparent 45%),var(--paper);font-family:'JetBrains Mono',monospace;color:var(--ink);padding:40px 16px 64px;min-height:100vh;}
+  .sheet{max-width:760px;margin:0 auto;background:var(--paper);border:1px solid var(--line);border-radius:4px;box-shadow:var(--card-shadow);position:relative;padding:0 0 36px 0;overflow:hidden;}
+  .sheet::before{content:"";position:absolute;top:0;bottom:0;left:56px;width:2px;background:var(--margin-red);opacity:0.55;}
+  .sheet::after{content:"";position:absolute;top:0;bottom:0;left:0;right:0;background-image:repeating-linear-gradient(to bottom,transparent 0px,transparent 38px,var(--line) 39px,transparent 40px);opacity:0.5;pointer-events:none;}
+  header.title-block{position:relative;padding:38px 32px 22px 80px;z-index:2;}
+  .eyebrow{font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--margin-red);font-weight:600;margin:0 0 6px;}
+  h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(26px,5vw,34px);font-weight:700;margin:0 0 4px;color:var(--ink);letter-spacing:-0.01em;}
+  .student{font-family:'Kalam',cursive;font-size:19px;color:var(--ink-soft);margin:2px 0 0;}
+  .meta{font-size:12px;color:var(--ink-soft);margin-top:10px;opacity:0.8;}
+  .ledger{position:relative;z-index:2;margin:6px 32px 0 80px;border-top:1px solid var(--ink);padding-top:2px;}
+  .ledger-head{display:grid;grid-template-columns:30px 1fr 92px 110px;gap:10px;font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-soft);padding:10px 4px 8px;border-bottom:1px solid var(--ink);}
+  .row{display:grid;grid-template-columns:30px 1fr 92px 110px;gap:10px;align-items:center;padding:11px 4px;border-bottom:1px dashed var(--line);transition:background .15s ease;}
+  .row:hover{background:rgba(178,58,46,0.04);}
+  .row.math{background:var(--math-amber-bg);border-bottom:1px dashed #E3C181;border-radius:3px;}
+  .row.pending .grade-input{border-style:dashed;color:var(--pending);}
+  .row.pending .value{color:var(--pending);font-style:italic;}
+  .num{font-size:12px;color:var(--ink-soft);}
+  .subject{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14.5px;color:var(--ink);display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+  .badge{font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:0.05em;color:#fff;background:var(--math-amber);padding:2px 6px;border-radius:20px;text-transform:uppercase;}
+  .grade-input{width:100%;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;text-align:center;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 4px;color:var(--ink);outline:none;}
+  .grade-input:focus{border-color:var(--margin-red);box-shadow:0 0 0 3px rgba(178,58,46,0.12);}
+  .value{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14.5px;text-align:right;color:var(--stamp-green);}
+  .progress-line{margin:18px 32px 0 80px;font-size:11.5px;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:center;}
+  .progress-track{flex:1;height:5px;background:var(--line);border-radius:4px;margin:0 12px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--stamp-green);border-radius:4px;transition:width .25s ease;}
+  .total-wrap{position:relative;z-index:2;margin:30px 32px 0 80px;display:flex;justify-content:flex-end;}
+  .stamp{position:relative;border:3px solid var(--stamp-green);border-radius:50%;width:168px;height:168px;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-6deg);color:var(--stamp-green);text-align:center;background:rgba(47,107,79,0.04);}
+  .stamp::before{content:"";position:absolute;inset:7px;border:1px solid var(--stamp-green);border-radius:50%;opacity:0.6;}
+  .stamp-label{font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;font-weight:700;}
+  .stamp-value{font-family:'Kalam',cursive;font-size:30px;font-weight:700;line-height:1.1;margin-top:2px;}
+  .stamp-sub{font-family:'Space Grotesk',sans-serif;font-size:9px;letter-spacing:0.06em;margin-top:3px;opacity:0.85;}
+  .legend{position:relative;z-index:2;margin:30px 32px 0 80px;background:var(--paper-deep);border:1px solid var(--line);border-radius:8px;padding:16px 18px;}
+  .legend h3{font-family:'Space Grotesk',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 10px;color:var(--ink-soft);}
+  .tiers{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;font-size:11px;}
+  .tier-col{background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 4px;text-align:center;}
+  .tier-col .g{color:var(--ink-soft);font-size:10px;}
+  .tier-col .v{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--stamp-green);}
+  .tiers.math .v{color:var(--math-amber);}
+  .tier-title{font-size:10.5px;color:var(--ink-soft);margin:12px 0 6px;}
+  .rule-note{margin-top:12px;font-size:11.5px;color:var(--ink-soft);line-height:1.5;border-top:1px dashed var(--line);padding-top:10px;}
+  .rule-note b{color:var(--ink);}
+  .actions{position:relative;z-index:2;margin:18px 32px 0 80px;display:flex;gap:10px;flex-wrap:wrap;}
+  button.reset{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;background:#fff;border:1px solid var(--ink);color:var(--ink);padding:8px 14px;border-radius:20px;cursor:pointer;}
+  button.reset:hover{background:var(--ink);color:#fff;}
+  .saved-note{font-size:10.5px;color:var(--ink-soft);align-self:center;opacity:0.75;}
+  @media(max-width:540px){.sheet::before{left:26px;}header.title-block{padding-left:42px;}.ledger,.progress-line,.total-wrap,.legend,.actions{margin-left:42px;margin-right:18px;}.ledger-head,.row{grid-template-columns:22px 1fr 70px 84px;gap:6px;}.subject{font-size:13px;}.tiers{grid-template-columns:repeat(5,1fr);font-size:9.5px;}}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="title-block">
+    <p class="eyebrow">Boletim da Mesada</p>
+    <h1>Quanto o Lucas ganhou este período?</h1>
+    <p class="student">Lucas P. R. Zaccaro Santana</p>
+    <p class="meta" id="updated-at">—</p>
+  </header>
+  <div class="ledger">
+    <div class="ledger-head">
+      <span>Nº</span><span>Matéria</span><span style="text-align:center">Nota</span><span style="text-align:right">Valor</span>
+    </div>
+    <div id="rows"></div>
+  </div>
+  <div class="progress-line">
+    <span id="progress-label">0/10 notas lançadas</span>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <div class="total-wrap">
+    <div class="stamp">
+      <span class="stamp-label">Mesada total</span>
+      <span class="stamp-value" id="total-value">R$ 0</span>
+      <span class="stamp-sub" id="total-count">0 de 10 matérias</span>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="reset" id="reset-btn">↺ Restaurar notas originais</button>
+    <span class="saved-note" id="save-note">as alterações são salvas automaticamente</span>
+  </div>
+  <div class="legend">
+    <h3>Tabela de valores · matérias gerais</h3>
+    <div class="tiers" id="tier-normal"></div>
+    <p class="tier-title">Tabela de valores · matemática (bônus)</p>
+    <div class="tiers math" id="tier-math"></div>
+    <p class="rule-note">
+      <b>Regra de arredondamento:</b> notas com decimais valem pela faixa cheia imediatamente abaixo.
+      Ex.: <b>7.2</b> conta como nota <b>7</b>; <b>6.8</b> conta como nota <b>6</b>. Notas abaixo de 6 não geram valor. Nota 10 exata vale o valor máximo da faixa.
+    </p>
+  </div>
+</div>
+<script>
+(function(){
+  const VALUE_NORMAL={6:20,7:30,8:40,9:50,10:80};
+  const VALUE_MATH={6:50,7:80,8:100,9:150,10:200};
+  const DEFAULT_SUBJECTS=[
+    {id:'portugues',name:'Português',grade:7.2,math:false},
+    {id:'matematica',name:'Matemática',grade:6.8,math:true},
+    {id:'ingles',name:'Inglês',grade:null,math:false},
+    {id:'geografia',name:'Geografia',grade:7.1,math:false},
+    {id:'artes',name:'Artes',grade:null,math:false},
+    {id:'historia',name:'História',grade:6.7,math:false},
+    {id:'religioso',name:'Ensino Religioso',grade:7.1,math:false},
+    {id:'redacao',name:'Redação',grade:9,math:false},
+    {id:'ciencias',name:'Ciências',grade:null,math:false},
+    {id:'espanhol',name:'Espanhol',grade:null,math:false},
+  ];
+  const STORAGE_KEY='mesada-lucas-notas';
+  const rowsEl=document.getElementById('rows');
+  let subjects=DEFAULT_SUBJECTS.map(s=>({...s}));
+  function gradeToValue(grade,isMath){
+    if(grade===null||grade===undefined||grade===''||isNaN(grade))return null;
+    const g=Math.max(0,Math.min(10,parseFloat(grade)));
+    const tier=Math.floor(g);
+    if(tier<6)return 0;
+    const table=isMath?VALUE_MATH:VALUE_NORMAL;
+    return table[tier]??table[10];
+  }
+  function fmtBRL(n){return 'R$ '+n.toLocaleString('pt-BR');}
+  function render(){
+    rowsEl.innerHTML='';
+    let total=0,filled=0;
+    subjects.forEach((s,idx)=>{
+      const val=gradeToValue(s.grade,s.math);
+      const pending=val===null;
+      if(!pending){total+=val;filled++;}
+      const row=document.createElement('div');
+      row.className='row'+(s.math?' math':'')+(pending?' pending':'');
+      row.innerHTML=`<span class="num">${String(idx+1).padStart(2,'0')}</span><span class="subject">${s.name}${s.math?'<span class="badge">★ bônus</span>':''}</span><input class="grade-input" type="number" min="0" max="10" step="0.1" placeholder="–" value="${s.grade??''}" data-id="${s.id}"><span class="value">${pending?'pendente':fmtBRL(val)}</span>`;
+      rowsEl.appendChild(row);
+    });
+    document.getElementById('total-value').textContent=fmtBRL(total);
+    document.getElementById('total-count').textContent=`${filled} de ${subjects.length} matérias`;
+    document.getElementById('progress-label').textContent=`${filled}/${subjects.length} notas lançadas`;
+    document.getElementById('progress-pct').textContent=Math.round((filled/subjects.length)*100)+'%';
+    document.getElementById('progress-fill').style.width=Math.round((filled/subjects.length)*100)+'%';
+    rowsEl.querySelectorAll('.grade-input').forEach(input=>{input.addEventListener('input',onGradeChange);});
+    const now=new Date();
+    document.getElementById('updated-at').textContent='Atualizado em '+now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  }
+  function onGradeChange(e){
+    const id=e.target.getAttribute('data-id');
+    const raw=e.target.value;
+    const subj=subjects.find(s=>s.id===id);
+    subj.grade=raw===''?null:parseFloat(raw);
+    persist();render();
+    const newInput=document.querySelector(`.grade-input[data-id="${id}"]`);
+    if(newInput){newInput.focus();newInput.setSelectionRange(newInput.value.length,newInput.value.length);}
+  }
+  async function persist(){
+    try{if(window.storage){const payload={};subjects.forEach(s=>payload[s.id]=s.grade);await window.storage.set(STORAGE_KEY,JSON.stringify(payload),false);}}catch(err){console.warn('Não foi possível salvar:',err);}
+  }
+  async function loadPersisted(){
+    try{if(window.storage){const result=await window.storage.get(STORAGE_KEY,false);if(result&&result.value){const saved=JSON.parse(result.value);subjects.forEach(s=>{if(saved[s.id]!==undefined)s.grade=saved[s.id];});}}}catch(err){}
+    render();
+  }
+  document.getElementById('reset-btn').addEventListener('click',()=>{subjects=DEFAULT_SUBJECTS.map(s=>({...s}));persist();render();});
+  function buildLegend(){
+    const tn=document.getElementById('tier-normal');
+    const tm=document.getElementById('tier-math');
+    [6,7,8,9,10].forEach(g=>{
+      tn.innerHTML+=`<div class="tier-col"><div class="g">nota ${g}</div><div class="v">${fmtBRL(VALUE_NORMAL[g])}</div></div>`;
+      tm.innerHTML+=`<div class="tier-col"><div class="g">nota ${g}</div><div class="v">${fmtBRL(VALUE_MATH[g])}</div></div>`;
+    });
+  }
+  buildLegend();loadPersisted();
+})();
+</script>
+</body>
+</html>
