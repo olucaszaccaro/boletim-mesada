@@ -149,6 +149,11 @@
       row.innerHTML=`<span class="num">${String(idx+1).padStart(2,'0')}</span><span class="subject">${s.name}${s.math?'<span class="badge">★ bônus</span>':''}</span><input class="grade-input" type="number" min="0" max="10" step="0.1" placeholder="–" value="${s.grade??''}" data-id="${s.id}"><span class="value">${pending?'pendente':fmtBRL(val)}</span>`;
       rowsEl.appendChild(row);
     });
+    const noRecup=subjects.every(s=>s.grade===null||parseFloat(s.grade)>=6);
+    const bonusActive=(filled===subjects.length)&&noRecup;
+    const bonusEl=document.getElementById('bonus-row');
+    if(bonusEl)bonusEl.classList.toggle('bonus-locked',!bonusActive);
+    if(bonusActive)total+=100;
     document.getElementById('total-value').textContent=fmtBRL(total);
     document.getElementById('total-count').textContent=`${filled} de ${subjects.length} matérias`;
     document.getElementById('progress-label').textContent=`${filled}/${subjects.length} notas lançadas`;
